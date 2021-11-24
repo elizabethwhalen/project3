@@ -31,8 +31,16 @@ app.use(express.static(public_dir));
 // Respond with list of codes and their corresponding incident type
 app.get('/codes', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
+
+    db.all('SELECT code, incident_type FROM Codes ORDER BY code', (err, rows) => {
+        if (err) {
+            res.status(404).send('Error: data not found');
+        }
+        else {
+            res.status(200).type('json').send(rows);
+        }
     
-    res.status(200).type('json').send({});
+    });
 });
 
 // REST API: GET /neighborhoods
@@ -40,7 +48,16 @@ app.get('/codes', (req, res) => {
 app.get('/neighborhoods', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
 
-    res.status(200).type('json').send({});
+    db.all('SELECT neighborhood_number, neighborhood_name FROM Neighborhoods ORDER BY neighborhood_number', (err, rows) => {
+        if (err) {
+            res.status(404).send('Error: data not found');
+        }
+        else {
+            res.status(200).type('json').send(rows);
+        }
+    
+    });
+    
 });
 
 // REST API: GET/incidents
@@ -48,7 +65,23 @@ app.get('/neighborhoods', (req, res) => {
 app.get('/incidents', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
 
-    res.status(200).type('json').send({});
+    db.all('SELECT * FROM Incidents ORDER BY date_time', (err, rows) => {
+        //separate date and time
+        if (err) {
+            res.status(404).send('Error: data not found');
+        }
+        else {
+            var i;
+            for (i in rows){
+                //var arr = i[1].split('T');
+                //i[1].replace(arr[0]);
+            }
+
+            res.status(200).type('json').send(rows);
+        }
+    
+    });
+    
 });
 
 // REST API: PUT /new-incident
