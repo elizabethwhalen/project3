@@ -73,8 +73,15 @@ app.get('/incidents', (req, res) => {
         else {
             var i;
             for (i in rows){
-                //var arr = i[1].split('T');
-                //i[1].replace(arr[0]);
+                //console.log(rows[i].date_time);
+                var arr = rows[i].date_time.split('T');
+                var date = arr[0];
+                var time = arr[1];
+                //rows[i].date_time.replace(arr[0]);
+                rows[i]['date'] = date;
+                rows[i]['time'] = time;
+                delete rows[i].date_time;
+                //console.log(rows[i]);
             }
 
             res.status(200).type('json').send(rows);
@@ -88,7 +95,18 @@ app.get('/incidents', (req, res) => {
 // Respond with 'success' or 'error'
 app.put('/new-incident', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
+    //console.log('hi');
+    //db.all('INSERT INTO Incidents (?)', [window.location.search], (err, rows) => {
+    //    if (err) {
+            //res.status(404).send('Error: data not found');
+    //    }
+     //   else {
 
+
+
+      //  }
+    //});
+    
     res.status(200).type('txt').send('success');
 });
 
