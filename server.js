@@ -25,6 +25,8 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
 });
 
 app.use(express.static(public_dir));
+app.use(express.json());
+
 
 
 // REST API: GET /codes
@@ -32,15 +34,19 @@ app.use(express.static(public_dir));
 app.get('/codes', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
 
-    db.all('SELECT code, incident_type FROM Codes ORDER BY code', (err, rows) => {
-        if (err) {
-            res.status(404).send('Error: data not found');
-        }
-        else {
-            res.status(200).type('json').send(rows);
-        }
-    
+    let query = 'SELECT code, incident_type FROM Codes ORDER BY code';
+    let params = [];
+    let promise = databaseSelect(query, params);
+    promise.then((data) => {
+        //console.log(data);
+        res.status(200).type('json').send(data);
+        }, (error) => {
+            console.log(error); 
     });
+    
+
+
+ 
 });
 
 // REST API: GET /neighborhoods
@@ -48,14 +54,14 @@ app.get('/codes', (req, res) => {
 app.get('/neighborhoods', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
 
-    db.all('SELECT neighborhood_number, neighborhood_name FROM Neighborhoods ORDER BY neighborhood_number', (err, rows) => {
-        if (err) {
-            res.status(404).send('Error: data not found');
-        }
-        else {
-            res.status(200).type('json').send(rows);
-        }
-    
+    let query = 'SELECT neighborhood_number, neighborhood_name FROM Neighborhoods ORDER BY neighborhood_number';
+    let params = [];
+    let promise = databaseSelect(query, params);
+    promise.then((data) => {
+        //console.log(data);
+        res.status(200).type('json').send(data);
+        }, (error) => {
+            console.log(error); 
     });
     
 });
@@ -65,28 +71,22 @@ app.get('/neighborhoods', (req, res) => {
 app.get('/incidents', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
 
-    db.all('SELECT * FROM Incidents ORDER BY date_time', (err, rows) => {
-        //separate date and time
-        if (err) {
-            res.status(404).send('Error: data not found');
-        }
-        else {
-            var i;
-            for (i in rows){
-                //console.log(rows[i].date_time);
-                var arr = rows[i].date_time.split('T');
+    let query = 'SELECT * FROM Incidents ORDER BY date_time';
+    let params = [];
+    let promise = databaseSelect(query, params);
+    promise.then((data) => {
+        var i;
+            for (i in data){
+                var arr = data[i].date_time.split('T');
                 var date = arr[0];
                 var time = arr[1];
-                //rows[i].date_time.replace(arr[0]);
-                rows[i]['date'] = date;
-                rows[i]['time'] = time;
-                delete rows[i].date_time;
-                //console.log(rows[i]);
+                data[i]['date'] = date;
+                data[i]['time'] = time;
+                delete data[i].date_time;
             }
-
-            res.status(200).type('json').send(rows);
-        }
-    
+        res.status(200).type('json').send(data);
+        }, (error) => {
+            console.log(error); 
     });
     
 });
@@ -95,20 +95,15 @@ app.get('/incidents', (req, res) => {
 // Respond with 'success' or 'error'
 app.put('/new-incident', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
-    //console.log('hi');
-    //db.all('INSERT INTO Incidents (?)', [window.location.search], (err, rows) => {
-    //    if (err) {
-            //res.status(404).send('Error: data not found');
-    //    }
-     //   else {
-
-
-
-      //  }
-    //});
+    console.log(req.body);
     
-    res.status(200).type('txt').send('success');
+    //let query = 'INSERT INTO Incidents (case_number, date, time, code, incident, police_grid, neighborhood_number, block) VALUES (?, ?, ?, ?, ? ...)';
+
+    //two db statements, first db.get(SELECT ...), check for error, in else statement db.run , then have to concat date and time back together 
+
+
 });
+
 
 
 // Create Promise for SQLite3 database SELECT query 

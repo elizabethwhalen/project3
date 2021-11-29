@@ -1,0 +1,13 @@
+
+PUT http://localhost:8000/new-incident
+Content-Type: application/json
+{
+    "case_number": "1234",
+    "date": "2019-10-30",
+    "time": "23:57:10",
+    "code": 9966,
+    "incident": "Proactive Police Visit",
+    "police_grid": 66,
+    "neighborhood_number": 7,
+    "block": "THOMAS AV  & VICTORIA"
+}
