@@ -113,10 +113,12 @@ app.get('/neighborhoods', (req, res) => {
 // Respond with list of crime incidents
 app.get('/incidents', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
-
+    console.log(url.href);
     let query = 'SELECT * FROM Incidents';
 
-    parts = (String(url)).split('?');
+    parts = (String(url.href)).split('?');
+    limitValue = 1000;
+    ifWhere = false;
     if (parts.length > 1){
         for (let i=1; i<parts.length; i++){
             if (parts[i].split('=')[0] != 'id' || parts[i].split('=')[0] != 'start_date' || parts[i].split('=')[0] != 'end_date' || parts[i].split('=')[0] != 'code' || parts[i].split('=')[0] != 'grid' || parts[i].split('=')[0] != 'neighborhood' || parts[i].split('=')[0] != 'limit'){
@@ -127,24 +129,42 @@ app.get('/incidents', (req, res) => {
             let nArr = n.split(',');        //array of these codes/dates/etc
             //console.log(codeArr);
             if (param == 'grid' || param == 'code' || param == 'neighborhood'){
-                query = query + ' WHERE ' + param + '=';
-            }
-            for(let i=0; i<nArr.length; i++){
-                if (i != nArr.length-1){
-                    query = query + nArr[i] + ' OR  neighborhood_number=';
+                if (ifWhere){
+                    query = query + ' AND ' + param + '=';
                 } else {
-                    query = query + nArr[i];
+                    query = query + ' WHERE ' + param + '=';
                 }
+                ifWhere = true;
+                for(let j=0; j<nArr.length; j++){
+                    if (j != nArr.length-1){
+                        query = query + nArr[j] + ' OR  ' + param + '=';
+                    } else {
+                        query = query + nArr[j];
+                    }
+                }
+            } else if (param == 'limit'){
+                limitValue = nArr[0];
+            } else if (param == 'start_date'){
+                if(ifWhere){
+                    query = query + ' AND ' + param + ' >= ' + nArr[0];
+                } else {
+                    query = query + ' WHERE ' + param + ' >= ' + nArr[0];
+                }
+                ifWhere = true;
+            } else if (param == 'end_date'){
+                if(ifWhere){
+                    query = query + ' AND ' + param + ' <= ' + nArr[0];
+                } else {
+                    query = query + ' WHERE ' + param + ' <= ' + nArr[0];
+                }
+                ifWhere = true;
             }
+            
         }
         
     }
-    query = query + ' ORDER BY date_time';
+    query = query + ' ORDER BY date_time LIMIT ' + limitValue;
     console.log(query);
-
-
-
-
 
     let params = [];
     let promise = databaseSelect(query, params);
