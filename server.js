@@ -96,7 +96,7 @@ app.get('/neighborhoods', (req, res) => {
         }
     }
     query = query + ' ORDER BY neighborhood_number';
-    console.log(query);
+    //console.log(query);
 
     let params = [];
     let promise = databaseSelect(query, params);
@@ -114,7 +114,38 @@ app.get('/neighborhoods', (req, res) => {
 app.get('/incidents', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
 
-    let query = 'SELECT * FROM Incidents ORDER BY date_time';
+    let query = 'SELECT * FROM Incidents';
+
+    parts = (String(url)).split('?');
+    if (parts.length > 1){
+        for (let i=1; i<parts.length; i++){
+            if (parts[i].split('=')[0] != 'id' || parts[i].split('=')[0] != 'start_date' || parts[i].split('=')[0] != 'end_date' || parts[i].split('=')[0] != 'code' || parts[i].split('=')[0] != 'grid' || parts[i].split('=')[0] != 'neighborhood' || parts[i].split('=')[0] != 'limit'){
+                res.status(500).send('Unknown parameter');
+            }
+            let param = parts[i].split('=')[0];
+            let n = parts[i].split('=')[1]; //after the = (ex: 110,70)
+            let nArr = n.split(',');        //array of these codes/dates/etc
+            //console.log(codeArr);
+            if (param == 'grid' || param == 'code' || param == 'neighborhood'){
+                query = query + ' WHERE ' + param + '=';
+            }
+            for(let i=0; i<nArr.length; i++){
+                if (i != nArr.length-1){
+                    query = query + nArr[i] + ' OR  neighborhood_number=';
+                } else {
+                    query = query + nArr[i];
+                }
+            }
+        }
+        
+    }
+    query = query + ' ORDER BY date_time';
+    console.log(query);
+
+
+
+
+
     let params = [];
     let promise = databaseSelect(query, params);
     promise.then((data) => {
@@ -137,46 +168,54 @@ app.get('/incidents', (req, res) => {
 // REST API: PUT /new-incident
 // Respond with 'success' or 'error'
 app.put('/new-incident', (req, res) => {
-    let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
-    //console.log(req.body);
-
-    //console.log(req.body);
-    let query = 'SELECT case_number FROM Incidents WHERE case_number = ?';
-    let params = [req.body.case_number]
-
-    let promise = databaseInsert(query, params);
-    promise.then((data) => { 
-
-    });
-
-    db.get('SELECT case_number FROM Incidents WHERE case_number = ?', [req.body.case_number], (err, rows) => {
-        if (rows == undefined) {
-            console.log(rows);
-
-            console.log('no matching case number');
+    //console.log(req.body.case_number);
+    db.get('SELECT case_number FROM Incidents WHERE case_number = ?', [req.body.case_number], (err, row) => {
+        if (err || row!=undefined) {
+            //console.log('matching case number');
+            res.status(500).send('Error: incident already in database');
+        } else {
+            //console.log(row);
+            //console.log('no matching case number');
             let date_time = req.body.date + 'T' + req.body.time;
-            db.run(`INSERT INTO Incidents VALUES(?, ?, ?, ?, ?, ?, ?)`, ['req.body.case_number, date_time, req.body.code,  req.body.incident, req.body.police_grid, req.body.neighborhood_number, req.body.block'], function(err) {
+            db.run(`INSERT INTO Incidents VALUES(?, ?, ?, ?, ?, ?, ?)`, [req.body.case_number, date_time, req.body.code,  req.body.incident, req.body.police_grid, req.body.neighborhood_number, req.body.block], function(err) {
                 if (err) {
-                  return console.log(err.message);
+                  res.status(500).send('Error: could not insert into database');
                 }
-                // get the last insert id
-                console.log(`A row has been inserted with rowid ${this.lastID}`);
+                else {
+                    res.status(200).send(`Success: A row has been inserted`);
+                    
+                }
+                
               });
             
         }
-        else {
+    });
+});
+
+app.delete('/remove-incident', (req, res) => {
+    let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
+    console.log(req.body.case_number);
+    db.get('SELECT case_number FROM Incidents WHERE case_number = ?', [req.body.case_number], (err, row) => {
+        //console.log(req.body.case_number);
+        if (err || row==undefined) {
+            console.log('no matching case number');
+            res.status(500).send('Error: case number not in database');
+        } else {
             console.log('matching case number');
-            res.status(500).send('Error: incident already in database');
+           // let date_time = req.body.date + 'T' + req.body.time;
+            db.run(`DELETE FROM Incidents WHERE case_number = ?`, [req.body.case_number], function(err) {
+                if (err) {
+                  res.status(500).send('Error: could not delete from database');
+
+                }
+                else {
+                    res.status(200).send(`Success: A row has been deleted`);
+                }
+              });
+            
         }
     });
     
-    //let query = 'INSERT INTO Incidents (case_number, date, time, code, incident, police_grid, neighborhood_number, block) VALUES (?, ?, ?, ?, ? ...)';
-
-
-    
-    //two db statements, first db.get(SELECT ...), check for error, in else statement db.run (INSERT ...) , then have to concat date and time back together 
-
-
 });
 
 
