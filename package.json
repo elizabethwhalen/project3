@@ -3,13 +3,23 @@
     "version": "0.0.0",
     "description": "RESTful Web Server and Single Page Application",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Elizabeth Whalen",
+        "email": "whal1731@stthomas.edu"
     },
+    "contributors": [
+        {
+        "name": "Emma Torres",
+        "email": "torr3020@stthomas.edu"
+        },
+        {
+        "name": "Tseng Yang",
+        "email": "tseng.yang@stthomas.edu"
+        }
+    ],
     "main": "server.js",
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/elizabethwhalen/project3.git"
     },
     "dependencies": {
         "cors": "^2.8.5",
