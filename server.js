@@ -113,64 +113,82 @@ app.get('/neighborhoods', (req, res) => {
 // Respond with list of crime incidents
 app.get('/incidents', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
-    console.log(url.href);
+    //console.log(url.href);
     let query = 'SELECT * FROM Incidents';
 
     parts = (String(url.href)).split('?');
-    limitValue = 1000;
+    let limitValue = 1000;
     ifWhere = false;
+    //console.log(parts);
+    parts = parts[1].split('&');
+    //console.log(parts);
+
     if (parts.length > 1){
-        for (let i=1; i<parts.length; i++){
-            if (parts[i].split('=')[0] != 'id' || parts[i].split('=')[0] != 'start_date' || parts[i].split('=')[0] != 'end_date' || parts[i].split('=')[0] != 'code' || parts[i].split('=')[0] != 'grid' || parts[i].split('=')[0] != 'neighborhood' || parts[i].split('=')[0] != 'limit'){
+        for (let i=0; i<parts.length; i++){
+            //console.log(parts[i].split('=')[0]);
+            if (parts[i].split('=')[0] != 'id' && parts[i].split('=')[0] != 'start_date' && parts[i].split('=')[0] != 'end_date' && parts[i].split('=')[0] != 'code' && parts[i].split('=')[0] != 'grid' && parts[i].split('=')[0] != 'neighborhood' && parts[i].split('=')[0] != 'limit'){
                 res.status(500).send('Unknown parameter');
             }
             let param = parts[i].split('=')[0];
             let n = parts[i].split('=')[1]; //after the = (ex: 110,70)
             let nArr = n.split(',');        //array of these codes/dates/etc
-            //console.log(codeArr);
+            //console.log(nArr);
             if (param == 'grid' || param == 'code' || param == 'neighborhood'){
-                if (ifWhere){
-                    query = query + ' AND ' + param + '=';
+                let newParam = '';
+                if (param=='grid'){
+                    newParam = 'police_grid';
+                }
+                else if(param =='neighborhood'){
+                    newParam = 'neighborhood_number';
                 } else {
-                    query = query + ' WHERE ' + param + '=';
+                    newParam = 'code';
+                }
+                if (ifWhere){
+                    query = query + ' AND ' + newParam + '=';
+                } else {
+                    query = query + ' WHERE ' + newParam + '=';
                 }
                 ifWhere = true;
                 for(let j=0; j<nArr.length; j++){
                     if (j != nArr.length-1){
-                        query = query + nArr[j] + ' OR  ' + param + '=';
+                        query = query + nArr[j] + ' OR  ' + newParam + '=';
                     } else {
                         query = query + nArr[j];
                     }
                 }
             } else if (param == 'limit'){
-                limitValue = nArr[0];
+
+                limitValue = parseInt(nArr[0]);
             } else if (param == 'start_date'){
                 if(ifWhere){
-                    query = query + ' AND ' + param + ' >= ' + nArr[0];
+                    query = query + ' AND date_time >= "' + nArr[0] + 'T00:00:00"';
                 } else {
-                    query = query + ' WHERE ' + param + ' >= ' + nArr[0];
+                    query = query + ' WHERE date_time >= "' + nArr[0] + 'T00:00:00"';
                 }
                 ifWhere = true;
             } else if (param == 'end_date'){
                 if(ifWhere){
-                    query = query + ' AND ' + param + ' <= ' + nArr[0];
+                    query = query + ' AND date_time <= "' + nArr[0] + 'T23:59:59"';
                 } else {
-                    query = query + ' WHERE ' + param + ' <= ' + nArr[0];
+                    query = query + ' WHERE date_time <= "' + nArr[0] + 'T23:59:59"';
                 }
                 ifWhere = true;
-            }
-            
+            } 
         }
-        
     }
-    query = query + ' ORDER BY date_time LIMIT ' + limitValue;
-    console.log(query);
+    if (ifWhere){
+        query= query + ' AND code>-1 ORDER BY date_time LIMIT ' + limitValue;
+    } else {
+        query = query + ' WHERE code>-1 ORDER BY date_time LIMIT ' + limitValue;
+    }
+    //console.log(query);
 
     let params = [];
     let promise = databaseSelect(query, params);
     promise.then((data) => {
         var i;
-            for (i in data){
+            for (i = 0; i< data.length; i++){
+                //console.log(data[i]);
                 var arr = data[i].date_time.split('T');
                 var date = arr[0];
                 var time = arr[1];
@@ -214,14 +232,14 @@ app.put('/new-incident', (req, res) => {
 
 app.delete('/remove-incident', (req, res) => {
     let url = new URL(req.protocol + '://' + req.get('host') + req.originalUrl);
-    console.log(req.body.case_number);
+    //console.log(req.body.case_number);
     db.get('SELECT case_number FROM Incidents WHERE case_number = ?', [req.body.case_number], (err, row) => {
         //console.log(req.body.case_number);
         if (err || row==undefined) {
-            console.log('no matching case number');
+            //console.log('no matching case number');
             res.status(500).send('Error: case number not in database');
         } else {
-            console.log('matching case number');
+            //console.log('matching case number');
            // let date_time = req.body.date + 'T' + req.body.time;
             db.run(`DELETE FROM Incidents WHERE case_number = ?`, [req.body.case_number], function(err) {
                 if (err) {

@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "cors": "^2.8.5",
+        "curl": "^0.1.4",
         "express": "^4.17.1",
         "node": "^17.1.0",
         "sqlite": "^4.0.23",
