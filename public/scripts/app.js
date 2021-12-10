@@ -63,6 +63,19 @@ function init() {
     });
 }
 
+
+
+var url = "https://nominatim.openstreetmap.org/search?q=" + vm.message + "&format=json&accept-language=en";
+console.log(url);
+
+var example1 = new Vue({
+    el: '#input-box',
+    data: {
+      counter: 0
+    }
+  })
+
+
 function getJSON(url) {
     return new Promise((resolve, reject) => {
         $.ajax({
