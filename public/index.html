@@ -28,27 +28,37 @@
 <body onload="init()">
     <!-- Main app -->
     <div id="app">
+        <h1>St. Paul Crime Map</h1>
         <div id="leafletmap"></div>
+        <input type="text" v-model="search_bar" placeholder="Search an Address"/>
+        <button type="button" @click="search">Go</button>
+        <p>EX:120 W Kellogg Blvd, St Paul, MN 55102</p>
+        <a href="../about.html">About the project</a>
+        <br>
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <tr>
+                    <td> Case Number </td>
+                    <td> Date </td>
+                    <td> Time </td>
+                   <!-- <td> Crime Type </td> -->
+                    <td> Crime Type </td>
+                    <td> Police Grid </td>
+                    <td> Neighborhood </td>
+                    <td> Block </td>
+                </tr>
+                <tr v-for="item in incidents" v-if="visible_neighborhoods.includes(item.neighborhood_number)">
+                    <td>{{ item.case_number }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.time }}</td>
+                   <!-- <td>{{ code_dictionary[item.incident_type] }}</td> -->
+                    <td>{{ item.incident }}</td>
+                    <td>{{ item.police_grid }}</td>
+                    <td>{{ neighborhood_dictionary[item.neighborhood_number] }}</td>
+                    <td>{{ item.block }}</td>
+                    </tr>
+            </table>
+        </div>
     </div>
-
-
-    <div id="v-model-basic">
-        <input v-model="message" placeholder="Enter a location" />
-        <p>Message is: {{ message }}</p>
-    </div>
-
-    <script>
-    var vm = new Vue({
-    el: "#v-model-basic",
-    data: {
-      message: ""
-    },
-  })
-  </script>
-
-    <div id="input-box">
-        <button v-on:click="counter += 1">Go!</button>
-    </div>
-
 </body>
 </html>
