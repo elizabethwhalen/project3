@@ -41,8 +41,8 @@
                     <td> Case Number </td>
                     <td> Date </td>
                     <td> Time </td>
+                   <!-- <td> Crime Type </td> -->
                     <td> Crime Type </td>
-                    <td> Incident </td>
                     <td> Police Grid </td>
                     <td> Neighborhood </td>
                     <td> Block </td>
@@ -51,12 +51,12 @@
                     <td>{{ item.case_number }}</td>
                     <td>{{ item.date }}</td>
                     <td>{{ item.time }}</td>
-                    <td>{{ code_dictionary[item.code] }}</td>
+                   <!-- <td>{{ code_dictionary[item.incident_type] }}</td> -->
                     <td>{{ item.incident }}</td>
                     <td>{{ item.police_grid }}</td>
                     <td>{{ neighborhood_dictionary[item.neighborhood_number] }}</td>
                     <td>{{ item.block }}</td>
-                </tr>
+                    </tr>
             </table>
         </div>
     </div>

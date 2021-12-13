@@ -88,9 +88,11 @@ function init() {
         let neighborhood_dictionary = {};
         let i;
         for(i = 0; i<app.neighborhoods.length; i++){
-            neighborhood_dictionary[app.neighborhoods[i].id] = i+1 + ": " + app.neighborhoods[i].name;
+            neighborhood_dictionary[app.neighborhoods[i].neighborhood_number] = app.neighborhoods[i].neighborhood_name;
         }
         app.neighborhood_dictionary = neighborhood_dictionary;
+        console.log(neighborhood_dictionary);
+
     }).catch((error) => {
         console.log('Error:', error);
     });
