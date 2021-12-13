@@ -33,22 +33,15 @@
 
 
     <div id="v-model-basic">
-        <input v-model="message" placeholder="Enter a location" />
+        <input id="input" v-model="message" placeholder="Enter a location" />
         <p>Message is: {{ message }}</p>
     </div>
-
-    <script>
-    var vm = new Vue({
-    el: "#v-model-basic",
-    data: {
-      message: ""
-    },
-  })
-  </script>
 
     <div id="input-box">
         <button v-on:click="counter += 1">Go!</button>
     </div>
+
+    <script src="app.js"></script>
 
 </body>
 </html>

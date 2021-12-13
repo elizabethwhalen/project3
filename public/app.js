@@ -65,8 +65,14 @@ function init() {
 
 
 
-var url = "https://nominatim.openstreetmap.org/search?q=" + vm.message + "&format=json&accept-language=en";
-console.log(url);
+var inputMessage = new Vue ({
+    el: '#v-model-basic',
+    data: {
+        message: "hello"
+    }
+})
+
+console.log(inputMessage.message);
 
 var example1 = new Vue({
     el: '#input-box',
