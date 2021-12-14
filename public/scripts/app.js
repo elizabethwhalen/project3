@@ -257,7 +257,5 @@ function search() {
                 //console.log(app.map.bounds.nw);
             }
         });
-``}
-
-
+    }
 }
