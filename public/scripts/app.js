@@ -58,7 +58,7 @@ function init() {
     }).addTo(map);
     map.setMaxBounds([[44.883658, -93.217977], [45.008206, -92.993787]]);
     
-    map.on("moveend",updateMapIncidents);
+    map.on("moveend",updateMap);
 
     let district_boundary = new L.geoJson();
     district_boundary.addTo(map);
@@ -85,57 +85,64 @@ function init() {
 
     getJSON('/neighborhoods').then((result) =>{
         app.neighborhoods = result;
-        let neighborhood_dictionary = {};
-        let i;
+        let neighborhoodDictionary = {};
         for(i = 0; i<app.neighborhoods.length; i++){
-            neighborhood_dictionary[app.neighborhoods[i].neighborhood_number] = app.neighborhoods[i].neighborhood_name;
+            neighborhoodDictionary[app.neighborhoods[i].neighborhood_number] = app.neighborhoods[i].neighborhood_name;
         }
-        app.neighborhood_dictionary = neighborhood_dictionary;
-        console.log(neighborhood_dictionary);
+        app.neighborhood_dictionary = neighborhoodDictionary;
+        //console.log(neighborhoodDictionary);
 
     }).catch((error) => {
         console.log('Error:', error);
     });
-    updateMapIncidents();
+    updateMap();
 }
 
-function updateMapIncidents() {
+function getJSON(url) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            dataType: "json",
+            url: url,
+            success: function(data) {
+                resolve(data);
+            },
+            error: function(status, message) {
+                reject({status: status.status, message: status.statusText});
+            }
+        });
+    });
+}
+
+function updateMap() {
     updateVisibleNeighborhoods();
     updateMarkers();
     getIncidents();
 }
 
-function updateMarkers()
-{
+function updateVisibleNeighborhoods(){
+    let visibleNeighborhoods = [];
+    for(let i = 0; i < neighborhood_markers.length; i++) {
+        if (neighborhood_markers[i].location[1] - 0.02 < map.getBounds().getEast() && neighborhood_markers[i].location[1] + 0.02 > map.getBounds().getWest()
+        && neighborhood_markers[i].location[0] - 0.02 < map.getBounds().getNorth() && neighborhood_markers[i].location[0] + 0.02 > map.getBounds().getSouth()) {
+            visibleNeighborhoods.push(i);
+        }
+    }
+    console.log("map interaction finished: " + visibleNeighborhoods);
+    if (visibleNeighborhoods.length != 0)
+        app.visible_neighborhoods = visibleNeighborhoods;
+}
+
+function updateMarkers() {
     while(app.markers.length > 0)
     {
         map.removeLayer(app.markers.pop())
     }
     for(let i = 0; i<app.visible_neighborhoods.length; i++){
         app.markers.push(L.marker(neighborhood_markers[i].location).addTo(map));
-        //app.markers[i].bindPopup('Hello');
     }
-}
-function updateVisibleNeighborhoods(){
-    
-    let seenNeighborhoods = [];
-    for(let i = 0; i < neighborhood_markers.length; i++)
-    {
-        if (neighborhood_markers[i].location[1] - 0.02 < map.getBounds().getEast() 
-        && neighborhood_markers[i].location[1] + 0.02 > map.getBounds().getWest()
-        && neighborhood_markers[i].location[0] - 0.02 < map.getBounds().getNorth()
-        && neighborhood_markers[i].location[0] + 0.02 > map.getBounds().getSouth())
-        {
-            seenNeighborhoods.push(i);
-        }
-    }
-    console.log("map interaction finished: " + seenNeighborhoods);
-    if (seenNeighborhoods.length != 0)
-        app.visible_neighborhoods = seenNeighborhoods;
 }
 
-function getIncidents()
-{
+function getIncidents() {
     if (app.visible_neighborhoods.length > 0)
     {
         let incSearch = "/incidents?id=" + (app.visible_neighborhoods[0] + 1);
@@ -184,19 +191,16 @@ function getIncidents()
     }
 }
 
-function search() 
-{
+function search() {
     let query = app.search_bar;
     console.log(query);
     getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + query + 'Saint Paul, Minnesota').then((result) => {
         console.log(result);
-        if (result.length == 0)
-        {
+        if (result.length == 0) {
             console.log('Error: no such address or object');
             app.search_bar = "";
         }
-        else
-        {
+        else {
             app.map.center.lat = parseFloat(result[0].lat);
             app.map.center.lng = parseFloat(result[0].lon);
             console.log(app.map.center.lat);
@@ -204,24 +208,9 @@ function search()
             map.setZoom(17);
             app.search_bar = result[0].display_name;
             app.map.center.address = result[0].display_name;
-            //console.log(app.map.bounds.nw);
+
         }
     });
 
 
-}
-
-function getJSON(url) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            dataType: "json",
-            url: url,
-            success: function(data) {
-                resolve(data);
-            },
-            error: function(status, message) {
-                reject({status: status.status, message: status.statusText});
-            }
-        });
-    });
 }
