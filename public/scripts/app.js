@@ -122,8 +122,8 @@ function updateMap() {
 function updateVisibleNeighborhoods(){
     let visibleNeighborhoods = [];
     for(let i = 0; i < neighborhood_markers.length; i++) {
-        if (neighborhood_markers[i].location[1] - 0.02 < map.getBounds().getEast() && neighborhood_markers[i].location[1] + 0.02 > map.getBounds().getWest()
-        && neighborhood_markers[i].location[0] - 0.02 < map.getBounds().getNorth() && neighborhood_markers[i].location[0] + 0.02 > map.getBounds().getSouth()) {
+        if (neighborhood_markers[i].location[1] - 0.005 < map.getBounds().getEast() && neighborhood_markers[i].location[1] + 0.005 > map.getBounds().getWest()
+        && neighborhood_markers[i].location[0] - 0.005 < map.getBounds().getNorth() && neighborhood_markers[i].location[0] + 0.005 > map.getBounds().getSouth()) {
             visibleNeighborhoods.push(i);
         }
     }

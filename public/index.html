@@ -27,21 +27,24 @@
 </head>
 <body onload="init()">
 
-    <div class="w3-light-grey navbar">
-        <a href="/" s class="w3-bar-item w3-button navbar-home">Home</a>
-        <a href="/about" s class="w3-bar-item w3-button navbar-home">About Page</a>
-    </div>
-
-
+    <div style="height: 9rem;">
+		<nav>
+		| <a href="index.html">Home</a> |
+		<a href="about.html">About Page</a> |
+		</nav>
+	</div>
+    
 
     <!-- Main app -->
     <div id="app">
-        <h1>St. Paul Crime Map</h1>
+        <h1 style="text-align: center;">St. Paul Crime Map</h1>
         <div id="leafletmap"></div>
-        <input type="text" v-model="search_bar" placeholder="Search an Address"/>
-        <button type="button" @click="search">Go</button>
-        <p>EX:120 W Kellogg Blvd, St Paul, MN 55102</p>
-        <a href="../about.html">About the project</a>
+        <div class="searchInput">
+            <input type="text" v-model="search_bar" placeholder="Search an Address"/>
+            <button type="button" @click="search">Go</button>
+            <p>EX:120 W Kellogg Blvd, St Paul, MN 55102</p>
+        </div>
+        <br>
         <br>
         <div class="cell table-scroll">
             <table>
