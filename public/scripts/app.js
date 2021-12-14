@@ -193,6 +193,7 @@ function getIncidents() {
 
 function search() {
     let query = app.search_bar;
+<<<<<<< Updated upstream
     console.log(query);
     getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + query + 'Saint Paul, Minnesota').then((result) => {
         console.log(result);
@@ -209,8 +210,73 @@ function search() {
             app.search_bar = result[0].display_name;
             app.map.center.address = result[0].display_name;
 
+=======
+    let newStr = query.replace(',', '');
+    //console.log("query: " + newStr);
+    let split_query = newStr.split(" ");
+    let new_query = "";
+    let number = true;
+    for (let i = 0; i<split_query.length; i++){
+        if(i == split_query.length -1){
+            new_query = new_query + split_query[i];
+            if(isNaN(split_query[i]) == true){
+                console.log("nan: " + split_query[i]);
+                number = false;
+            }
         }
-    });
+        else{
+            new_query = new_query + split_query[i] + "+";
+            if(isNaN(split_query[i]) ==true){
+                console.log("nan: " + split_query[i]);
+                number = false;
+            }
+>>>>>>> Stashed changes
+        }
+    }
+    //console.log("boolean: " + number);
+    //console.log(query);
+    if(number == false){
+        getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + new_query + '+Saint+Paul+Minnesota').then((result) => {
+            console.log(result);
+            if (result.length == 0)
+            {
+                console.log('Error: no such address or object');
+                app.search_bar = "";
+            }
+            else
+            {
+                app.map.center.lat = parseFloat(result[0].lat);
+                app.map.center.lng = parseFloat(result[0].lon);
+                console.log(app.map.center.lat);
+                map = map.panTo(new L.LatLng(app.map.center.lat, app.map.center.lng));
+                map.setZoom(17);
+                app.search_bar = result[0].display_name;
+                app.map.center.address = result[0].display_name;
+                //console.log(app.map.bounds.nw);
+            }
+        });
+    }
+    if(number == true){
+        getJSON('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + split_query[0] + '&lon=' + split_query[1]).then((result) => {
+            console.log("result: " + result);
+            if (result.length == 0)
+            {
+                console.log('Error: no such address or object');
+                app.search_bar = "";
+            }
+            else
+            {
+                app.map.center.lat = parseFloat(result[0].lat);
+                app.map.center.lng = parseFloat(result[0].lon);
+                console.log(app.map.center.lat);
+                map = map.panTo(new L.LatLng(app.map.center.lat, app.map.center.lng));
+                map.setZoom(17);
+                app.search_bar = result[0].display_name;
+                app.map.center.address = result[0].display_name;
+                //console.log(app.map.bounds.nw);
+            }
+        });
+``}
 
 
 }
