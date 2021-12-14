@@ -193,24 +193,6 @@ function getIncidents() {
 
 function search() {
     let query = app.search_bar;
-<<<<<<< Updated upstream
-    console.log(query);
-    getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + query + 'Saint Paul, Minnesota').then((result) => {
-        console.log(result);
-        if (result.length == 0) {
-            console.log('Error: no such address or object');
-            app.search_bar = "";
-        }
-        else {
-            app.map.center.lat = parseFloat(result[0].lat);
-            app.map.center.lng = parseFloat(result[0].lon);
-            console.log(app.map.center.lat);
-            map = map.panTo(new L.LatLng(app.map.center.lat, app.map.center.lng));
-            map.setZoom(17);
-            app.search_bar = result[0].display_name;
-            app.map.center.address = result[0].display_name;
-
-=======
     let newStr = query.replace(',', '');
     //console.log("query: " + newStr);
     let split_query = newStr.split(" ");
@@ -230,7 +212,6 @@ function search() {
                 console.log("nan: " + split_query[i]);
                 number = false;
             }
->>>>>>> Stashed changes
         }
     }
     //console.log("boolean: " + number);

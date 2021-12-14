@@ -29,7 +29,6 @@ table th {
     background: white;
 }
 
-<<<<<<< Updated upstream
 .navbar button{
     font-size: 2em;
     font-weight: bold;
@@ -42,14 +41,4 @@ table th {
 .navbar-home {
     font-size: 2em;
     font-weight: bold;
-=======
-nav{
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 2rem;
-    background-color: lightblue;
-    font-size: 2rem;
-    float: right;
->>>>>>> Stashed changes
 }
