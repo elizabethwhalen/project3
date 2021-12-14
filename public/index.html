@@ -26,9 +26,59 @@
     <!-- End: Application -->
 </head>
 <body onload="init()">
+
+<<<<<<< Updated upstream
+    <div class="w3-light-grey navbar">
+        <a href="/" s class="w3-bar-item w3-button navbar-home">Home</a>
+        <a href="/about" s class="w3-bar-item w3-button navbar-home">About Page</a>
+    </div>
+
+
+=======
+    <div style="height: 9rem;">
+		<nav>
+		| <a href="index.html">Home</a> |
+		<a href="about.html">About Page</a> |
+		</nav>
+	</div>
+    
+>>>>>>> Stashed changes
+
     <!-- Main app -->
     <div id="app">
+        <h1 style="text-align: center;">St. Paul Crime Map</h1>
         <div id="leafletmap"></div>
+        <div class="searchInput">
+            <input type="text" v-model="search_bar" placeholder="Search an Address"/>
+            <button type="button" @click="search">Go</button>
+            <p>EX:120 W Kellogg Blvd, St Paul, MN 55102</p>
+        </div>
+        <br>
+        <br>
+        <div class="cell table-scroll">
+            <table>
+                <tr>
+                    <td> Case Number </td>
+                    <td> Date </td>
+                    <td> Time </td>
+                   <!-- <td> Crime Type </td> -->
+                    <td> Crime Type </td>
+                    <td> Police Grid </td>
+                    <td> Neighborhood </td>
+                    <td> Block </td>
+                </tr>
+                <tr v-for="item in incidents" v-if="visible_neighborhoods.includes(item.neighborhood_number)">
+                    <td>{{ item.case_number }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.time }}</td>
+                   <!-- <td>{{ code_dictionary[item.incident_type] }}</td> -->
+                    <td>{{ item.incident }}</td>
+                    <td>{{ item.police_grid }}</td>
+                    <td>{{ neighborhood_dictionary[item.neighborhood_number] }}</td>
+                    <td>{{ item.block }}</td>
+                    </tr>
+            </table>
+        </div>
     </div>
 </body>
 </html>

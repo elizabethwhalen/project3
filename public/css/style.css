@@ -6,3 +6,50 @@
     width: 800px;  /* feel free to change this! */
     height: 600px; /* feel free to change this! */
 }
+
+.table-scroll {
+    width: max-width;
+    display: block;
+    height: 700px;
+    overflow-y: auto;
+}
+
+td {
+    text-align: center;
+}
+
+table th:first-child {
+    position: sticky;
+    left: 0;
+}
+
+table th { 
+    position: sticky;
+    top: 0;
+    background: white;
+}
+
+<<<<<<< Updated upstream
+.navbar button{
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.navbar-span a {
+    font-size:1.25em;
+}
+
+.navbar-home {
+    font-size: 2em;
+    font-weight: bold;
+=======
+nav{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    background-color: lightblue;
+    font-size: 2rem;
+    float: right;
+>>>>>>> Stashed changes
+}

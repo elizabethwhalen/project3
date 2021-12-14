@@ -177,9 +177,9 @@ app.get('/incidents', (req, res) => {
         }
     }
     if (ifWhere){
-        query= query + ' AND code>-1 ORDER BY date_time LIMIT ' + limitValue;
+        query= query + ' AND code>-1 ORDER BY date_time desc LIMIT ' + limitValue;
     } else {
-        query = query + ' WHERE code>-1 ORDER BY date_time LIMIT ' + limitValue;
+        query = query + ' WHERE code>-1 ORDER BY date_time desc LIMIT ' + limitValue;
     }
     //console.log(query);
 
