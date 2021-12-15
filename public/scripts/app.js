@@ -239,7 +239,6 @@ function search() {
     }
     if(number == true){
         getJSON('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + split_query[0] + '&lon=' + split_query[1]).then((result) => {
-            console.log("result: " + result);
             if (result.length == 0)
             {
                 console.log('Error: no such address or object');
@@ -247,8 +246,10 @@ function search() {
             }
             else
             {
-                app.map.center.lat = parseFloat(result[0].lat);
-                app.map.center.lng = parseFloat(result[0].lon);
+                //app.map.center.lat = parseFloat(result[0].lat);
+                //app.map.center.lng = parseFloat(result[0].lon);
+                app.map.center.lat = parseFloat(result.lat);
+                app.map.center.lng = parseFloat(result.lon);
                 console.log(app.map.center.lat);
                 map = map.panTo(new L.LatLng(app.map.center.lat, app.map.center.lng));
                 map.setZoom(17);
