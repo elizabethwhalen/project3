@@ -46,8 +46,31 @@ function init() {
             code_dictionary: {},
             neighborhood_dictionary: {},
             visible_neighborhoods: [],
-            markers: []
+            markers: [],
+            /*--------------Doesn't like these-----------------
+            start_date: "2014-08-14",
+            end_date: new Date().toISOString.slice(0,10),
+            start_time: "00:00",
+            end_time: "23:59",
+            num_crimes: 1000
+            --------------------------------------------------*/
+        },
+
+        //----------------------------Will have to change this---------------------------
+        methods: {
+            tableColor(incidents) {
+                if(incidents == "Murder" || incidents == "Homicide" || incidents == "Simple Asasult Dom." || incidents == "Discharge" || incidents == "Agg. Assault Dom." || incidents == "Agg. Assault" || incidents == "Rape") {
+                    return 'violentCrimesColor'
+                }
+                else if(incidents == "Theft" || incidents == "Auto Theft" || incidents == "Burglary" || incidents == "Vandalism" || incidents == "Robbery" || incidents == "Graffiti" || incidents == "Arson") {
+                    return 'propertyCrimeColor';
+                }
+                else {
+                    return 'otherCrimeColor'
+                }
+            }
         }
+        //------------------------------------------------------------------------------
     });
 
     map = L.map('leafletmap').setView([app.map.center.lat, app.map.center.lng], app.map.zoom);
@@ -90,7 +113,6 @@ function init() {
             neighborhoodDictionary[app.neighborhoods[i].neighborhood_number] = app.neighborhoods[i].neighborhood_name;
         }
         app.neighborhood_dictionary = neighborhoodDictionary;
-        //console.log(neighborhoodDictionary);
 
     }).catch((error) => {
         console.log('Error:', error);
@@ -233,6 +255,7 @@ function search() {
                 map.setZoom(17);
                 app.search_bar = result[0].display_name;
                 app.map.center.address = result[0].display_name;
+                updateMap();
                 //console.log(app.map.bounds.nw);
             }
         });
@@ -255,6 +278,7 @@ function search() {
                 map.setZoom(17);
                 app.search_bar = result[0].display_name;
                 app.map.center.address = result[0].display_name;
+                updateMap();
                 //console.log(app.map.bounds.nw);
             }
         });

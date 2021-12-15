@@ -43,3 +43,15 @@ nav{
     margin-left: auto;
     margin-right: auto;
 }
+
+.propertyCrimeColor { 
+    background-color: lightblue;
+}
+
+.violentCrimeColor {
+    background-color: salmon;
+}
+
+.otherCrimeColor {
+    background-color: lightgreen;
+}
