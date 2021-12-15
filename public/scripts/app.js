@@ -56,11 +56,11 @@ function init() {
             --------------------------------------------------*/
         },
 
-        //----------------------------Will have to change this---------------------------
         methods: {
             tableColor(incidents) {
+                console.log(incidents);
                 if(incidents == "Murder" || incidents == "Homicide" || incidents == "Simple Asasult Dom." || incidents == "Discharge" || incidents == "Agg. Assault Dom." || incidents == "Agg. Assault" || incidents == "Rape") {
-                    return 'violentCrimesColor'
+                    return 'violentCrimeColor'
                 }
                 else if(incidents == "Theft" || incidents == "Auto Theft" || incidents == "Burglary" || incidents == "Vandalism" || incidents == "Robbery" || incidents == "Graffiti" || incidents == "Arson") {
                     return 'propertyCrimeColor';
@@ -70,8 +70,9 @@ function init() {
                 }
             }
         }
-        //------------------------------------------------------------------------------
     });
+
+
 
     map = L.map('leafletmap').setView([app.map.center.lat, app.map.center.lng], app.map.zoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
