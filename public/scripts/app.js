@@ -152,8 +152,7 @@ function updateVisibleNeighborhoods(){
         }
     }
     console.log("map interaction finished: " + visibleNeighborhoods);
-    if (visibleNeighborhoods.length != 0)
-        app.visible_neighborhoods = visibleNeighborhoods;
+    app.visible_neighborhoods = visibleNeighborhoods;
 }
 
 function updateMarkers() {
