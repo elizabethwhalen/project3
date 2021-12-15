@@ -47,13 +47,13 @@ function init() {
             neighborhood_dictionary: {},
             visible_neighborhoods: [],
             markers: [],
-            /*--------------Doesn't like these-----------------
+            item: [],
+            
             start_date: "2014-08-14",
-            end_date: new Date().toISOString.slice(0,10),
+            end_date: "2021-09-30",
             start_time: "00:00",
             end_time: "23:59",
             num_crimes: 1000
-            --------------------------------------------------*/
         },
 
         methods: {
@@ -154,8 +154,7 @@ function updateVisibleNeighborhoods(){
         }
     }
     console.log("map interaction finished: " + visibleNeighborhoods);
-    if (visibleNeighborhoods.length != 0)
-        app.visible_neighborhoods = visibleNeighborhoods;
+    app.visible_neighborhoods = visibleNeighborhoods;
 }
 
 //This function should only update the visible markers on the map
