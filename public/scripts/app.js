@@ -46,9 +46,33 @@ function init() {
             code_dictionary: {},
             neighborhood_dictionary: {},
             visible_neighborhoods: [],
-            markers: []
+            markers: [],
+            /*--------------Doesn't like these-----------------
+            start_date: "2014-08-14",
+            end_date: new Date().toISOString.slice(0,10),
+            start_time: "00:00",
+            end_time: "23:59",
+            num_crimes: 1000
+            --------------------------------------------------*/
+        },
+
+        methods: {
+            tableColor(incidents) {
+                console.log(incidents);
+                if(incidents == "Murder" || incidents == "Homicide" || incidents == "Simple Asasult Dom." || incidents == "Discharge" || incidents == "Agg. Assault Dom." || incidents == "Agg. Assault" || incidents == "Rape") {
+                    return 'violentCrimeColor'
+                }
+                else if(incidents == "Theft" || incidents == "Auto Theft" || incidents == "Burglary" || incidents == "Vandalism" || incidents == "Robbery" || incidents == "Graffiti" || incidents == "Arson") {
+                    return 'propertyCrimeColor';
+                }
+                else {
+                    return 'otherCrimeColor'
+                }
+            }
         }
     });
+
+
 
     map = L.map('leafletmap').setView([app.map.center.lat, app.map.center.lng], app.map.zoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -90,7 +114,6 @@ function init() {
             neighborhoodDictionary[app.neighborhoods[i].neighborhood_number] = app.neighborhoods[i].neighborhood_name;
         }
         app.neighborhood_dictionary = neighborhoodDictionary;
-        //console.log(neighborhoodDictionary);
 
     }).catch((error) => {
         console.log('Error: ', error);
@@ -125,8 +148,8 @@ function updateMap() {
 function updateVisibleNeighborhoods(){
     let visibleNeighborhoods = [];
     for(let i = 0; i < neighborhood_markers.length; i++) {
-        if (neighborhood_markers[i].location[1] - 0.02 < map.getBounds().getEast() && neighborhood_markers[i].location[1] + 0.02 > map.getBounds().getWest()
-        && neighborhood_markers[i].location[0] - 0.02 < map.getBounds().getNorth() && neighborhood_markers[i].location[0] + 0.02 > map.getBounds().getSouth()) {
+        if (neighborhood_markers[i].location[1] - 0.005 < map.getBounds().getEast() && neighborhood_markers[i].location[1] + 0.005 > map.getBounds().getWest()
+        && neighborhood_markers[i].location[0] - 0.005 < map.getBounds().getNorth() && neighborhood_markers[i].location[0] + 0.005 > map.getBounds().getSouth()) {
             visibleNeighborhoods.push(i);
         }
     }
@@ -196,24 +219,72 @@ function getIncidents() {
 
 function search() {
     let query = app.search_bar;
-    console.log(query);
-    getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + query + 'Saint Paul, Minnesota').then((result) => {
-        console.log(result);
-        if (result.length == 0) {
-            console.log('Error: no such address or object');
-            app.search_bar = "";
+    let newStr = query.replace(',', '');
+    //console.log("query: " + newStr);
+    let split_query = newStr.split(" ");
+    let new_query = "";
+    let number = true;
+    for (let i = 0; i<split_query.length; i++){
+        if(i == split_query.length -1){
+            new_query = new_query + split_query[i];
+            if(isNaN(split_query[i]) == true){
+                console.log("nan: " + split_query[i]);
+                number = false;
+            }
         }
-        else {
-            app.map.center.lat = parseFloat(result[0].lat);
-            app.map.center.lng = parseFloat(result[0].lon);
-            console.log(app.map.center.lat);
-            map = map.panTo(new L.LatLng(app.map.center.lat, app.map.center.lng));
-            map.setZoom(17);
-            app.search_bar = result[0].display_name;
-            app.map.center.address = result[0].display_name;
-
+        else{
+            new_query = new_query + split_query[i] + "+";
+            if(isNaN(split_query[i]) ==true){
+                console.log("nan: " + split_query[i]);
+                number = false;
+            }
         }
-    });
-
-
+    }
+    //console.log("boolean: " + number);
+    //console.log(query);
+    if(number == false){
+        getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + new_query + '+Saint+Paul+Minnesota').then((result) => {
+            console.log(result);
+            if (result.length == 0)
+            {
+                console.log('Error: no such address or object');
+                app.search_bar = "";
+            }
+            else
+            {
+                app.map.center.lat = parseFloat(result[0].lat);
+                app.map.center.lng = parseFloat(result[0].lon);
+                console.log(app.map.center.lat);
+                map = map.panTo(new L.LatLng(app.map.center.lat, app.map.center.lng));
+                map.setZoom(17);
+                app.search_bar = result[0].display_name;
+                app.map.center.address = result[0].display_name;
+                updateMap();
+                //console.log(app.map.bounds.nw);
+            }
+        });
+    }
+    if(number == true){
+        getJSON('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + split_query[0] + '&lon=' + split_query[1]).then((result) => {
+            if (result.length == 0)
+            {
+                console.log('Error: no such address or object');
+                app.search_bar = "";
+            }
+            else
+            {
+                //app.map.center.lat = parseFloat(result[0].lat);
+                //app.map.center.lng = parseFloat(result[0].lon);
+                app.map.center.lat = parseFloat(result.lat);
+                app.map.center.lng = parseFloat(result.lon);
+                console.log(app.map.center.lat);
+                map = map.panTo(new L.LatLng(app.map.center.lat, app.map.center.lng));
+                map.setZoom(17);
+                app.search_bar = result[0].display_name;
+                app.map.center.address = result[0].display_name;
+                updateMap();
+                //console.log(app.map.bounds.nw);
+            }
+        });
+    }
 }

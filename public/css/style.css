@@ -29,16 +29,53 @@ table th {
     background: white;
 }
 
-.navbar button{
-    font-size: 2em;
-    font-weight: bold;
+nav{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    background-color: lightblue;
+    font-size: 2rem;
 }
 
-.navbar-span a {
-    font-size:1.25em;
+.searchInput {
+    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.navbar-home {
-    font-size: 2em;
-    font-weight: bold;
+.propertyCrimeColor { 
+    background-color: lightblue;
+
+}
+
+.violentCrimeColor {
+    background-color: salmon;
+
+}
+
+.otherCrimeColor {
+    background-color: lightgreen;
+
+}
+
+
+.propertyCrimeColorLegend { 
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: lightblue;
+}
+
+.violentCrimeColorLegend {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: salmon;
+}
+
+.otherCrimeColorLegend {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: lightgreen;
+}
+
+.Legend {
+    list-style-type: square;
+    align-items: left;
 }

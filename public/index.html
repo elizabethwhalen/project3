@@ -26,47 +26,116 @@
     <!-- End: Application -->
 </head>
 <body onload="init()">
-
-    <div class="w3-light-grey navbar">
-        <a href="/" s class="w3-bar-item w3-button navbar-home">Home</a>
-        <a href="/about" s class="w3-bar-item w3-button navbar-home">About Page</a>
-    </div>
-
-
+    <div style="height: 9rem;">
+		<nav>
+		| <a href="index.html">Home</a> |
+		<a href="about.html">About Page</a> |
+		</nav>
+	</div>
 
     <!-- Main app -->
     <div id="app">
-        <h1>St. Paul Crime Map</h1>
-        <div id="leafletmap"></div>
-        <input type="text" v-model="search_bar" placeholder="Search an Address"/>
-        <button type="button" @click="search">Go</button>
-        <p>EX:120 W Kellogg Blvd, St Paul, MN 55102</p>
-        <a href="../about.html">About the project</a>
+        <hr>
+        <h1 style="text-align: center;">St. Paul Crime Map</h1>
+        <hr>
         <br>
+        <br>
+        <div id="leafletmap"></div>
+        <div class="searchInput">
+            <input type="text" v-model="search_bar" placeholder="Search an Address"/>
+            <button type="button" @click="search">Go</button>
+            <p>EX:120 W Kellogg Blvd, St Paul, MN 55102</p>
+        </div>
+        <br>
+        <br>
+        <hr>
+        <h1 style="text-align: center;">
+            St. Paul Crime Data Table
+        </h1>
+        <div>
+            <b>Legend</b>
+            <ul class="Legend">
+                <li class="propertyCrimeColorLegend">Property Crime</li>
+                <li class="violentCrimeColorLegend">Violent Crime</li>
+                <li class="otherCrimeColorLegend">Other Crime</li>
+            </ul>
+        </div>
+        <hr>
         <div class="cell table-scroll">
-            <table>
+            <table id="crime_data">
                 <tr>
                     <td> Case Number </td>
-                    <td> Date </td>
-                    <td> Time </td>
-                   <!-- <td> Crime Type </td> -->
                     <td> Crime Type </td>
-                    <td> Police Grid </td>
                     <td> Neighborhood </td>
                     <td> Block </td>
+                    <td> Police Grid </td>
+                    <td> Date </td>
+                    <td> Time </td>
                 </tr>
                 <tr v-for="item in incidents" v-if="visible_neighborhoods.includes(item.neighborhood_number)">
-                    <td>{{ item.case_number }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.time }}</td>
-                   <!-- <td>{{ code_dictionary[item.incident_type] }}</td> -->
-                    <td>{{ item.incident }}</td>
-                    <td>{{ item.police_grid }}</td>
-                    <td>{{ neighborhood_dictionary[item.neighborhood_number] }}</td>
-                    <td>{{ item.block }}</td>
-                    </tr>
+                    <td :class="tableColor(item.incident)">{{ item.case_number }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.incident }}</td>
+                    <td :class="tableColor(item.incident)">{{ neighborhood_dictionary[item.neighborhood_number] }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.block }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.police_grid }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.date }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.time }}</td>
+                </tr>
             </table>
         </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div id="app" class="right_header">
+
+        <h1 style="text-align: center;">
+            Data Filter
+        </h1>
+        <hr>
+        <br>
+        <form id="filter">
+            <input type="text" name="num_crimes" v-bind:value="num_crimes"> # of crimes visible
+            
+            <br>
+            <br>
+            <!--Doesn't seem to like the start_date and end_date stuff-->
+            <input type="date" name="start_date" v-bind:value="start_date"> Begin Date
+            <br>
+            <input type="date" name="end_date" v-bind:value="end_date"> End Date
+            
+            <br>
+            <br>
+            
+            <input type="time" name="start_time" v-bind:value="start_time"> Begin Time
+            <br>
+            <input type="time" name="end_time" v-bind:value="end_time"> End Time
+            
+            <br>
+            <br>
+            
+
+            <ul style="list-style-type:none;">
+                <li v-for="item in incidents">
+                <input type="checkbox" name="neighborhoods" v-bind:value="neighborhoods.id" checked/> {{ neighborhood_dictionary[item.neighborhood_number] }}
+                </li>
+            </ul>
+
+
+            <br>
+            <ul style="list-style-type:none;">
+                <li v-for="incident of incidents"> 
+                <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/> {{ item.incident }}
+                </li>
+            </ul>
+            <br>
+            <br>
+            <input type="reset" onclick="window.location.reload()"/>
+            <input id="submit" type="button" value = "Submit" onclick = "updateCheckboxes()">
+
+        </form>
     </div>
 </body>
 </html>
