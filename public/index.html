@@ -83,18 +83,18 @@
                 </tr>
             </table>
         </div>
-    </div>
+    <!--</div>-->
 
-    <br>
-    <br>
-    <br>
-    <hr>
-    <div id="app" class="right_header">
+        <br>
+        <br>
+        <br>
+        <hr>
+    <!--<div id="app" class="right_header">-->
 
         <h1 style="text-align: center;">
             Data Filter
         </h1>
-        <hr>
+        <br>
         <br>
         <form id="filter">
             <input type="text" name="num_crimes" v-bind:value="num_crimes"> # of crimes visible
@@ -122,8 +122,6 @@
                 <input type="checkbox" name="neighborhoods" v-bind:value="neighborhoods.id" checked/> {{ neighborhood_dictionary[item.neighborhood_number] }}
                 </li>
             </ul>
-
-
             <br>
             <ul style="list-style-type:none;">
                 <li v-for="incident of incidents"> 
