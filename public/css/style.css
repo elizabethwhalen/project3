@@ -29,20 +29,6 @@ table th {
     background: white;
 }
 
-<<<<<<< Updated upstream
-.navbar button{
-    font-size: 2em;
-    font-weight: bold;
-}
-
-.navbar-span a {
-    font-size:1.25em;
-}
-
-.navbar-home {
-    font-size: 2em;
-    font-weight: bold;
-=======
 nav{
     text-align: center;
     margin-left: auto;
@@ -50,6 +36,22 @@ nav{
     padding: 2rem;
     background-color: lightblue;
     font-size: 2rem;
-    float: right;
->>>>>>> Stashed changes
+}
+
+.searchInput {
+    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.propertyCrimeColor { 
+    background-color: lightblue;
+}
+
+.violentCrimeColor {
+    background-color: salmon;
+}
+
+.otherCrimeColor {
+    background-color: lightgreen;
 }
