@@ -59,10 +59,14 @@ function init() {
         methods: {
             tableColor(incidents) {
                 console.log(incidents);
-                if(incidents == "Murder" || incidents == "Homicide" || incidents == "Simple Asasult Dom." || incidents == "Discharge" || incidents == "Agg. Assault Dom." || incidents == "Agg. Assault" || incidents == "Rape") {
+                if(incidents == "Homicide" || incidents == "Murder" || incidents == "Discharge" 
+                || incidents == "Simple Asasult Dom." || incidents == "Agg. Assault Dom." 
+                || incidents == "Agg. Assault" || incidents == "Rape") {
                     return 'violentCrimeColor'
                 }
-                else if(incidents == "Theft" || incidents == "Auto Theft" || incidents == "Burglary" || incidents == "Vandalism" || incidents == "Robbery" || incidents == "Graffiti" || incidents == "Arson") {
+                else if(incidents == "Theft" || incidents == "Auto Theft" || incidents == "Vandalism" 
+                || incidents == "Burglary" || incidents == "Robbery" || incidents == "Graffiti" 
+                || incidents == "Arson") {
                     return 'propertyCrimeColor';
                 }
                 else {
@@ -239,8 +243,6 @@ function search() {
             }
         }
     }
-    //console.log("boolean: " + number);
-    //console.log(query);
     if(number == false){
         getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + new_query + '+Saint+Paul+Minnesota').then((result) => {
             console.log(result);
@@ -272,8 +274,6 @@ function search() {
             }
             else
             {
-                //app.map.center.lat = parseFloat(result[0].lat);
-                //app.map.center.lng = parseFloat(result[0].lon);
                 app.map.center.lat = parseFloat(result.lat);
                 app.map.center.lng = parseFloat(result.lon);
                 console.log(app.map.center.lat);
@@ -282,7 +282,6 @@ function search() {
                 app.search_bar = result[0].display_name;
                 app.map.center.address = result[0].display_name;
                 updateMap();
-                //console.log(app.map.bounds.nw);
             }
         });
     }
