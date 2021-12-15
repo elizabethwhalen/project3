@@ -52,9 +52,17 @@
         <h1 style="text-align: center;">
             St. Paul Crime Data Table
         </h1>
+        <div>
+            <b>Legend</b>
+            <ul class="Legend">
+                <li class="propertyCrimeColorLegend">Property Crime</li>
+                <li class="violentCrimeColorLegend">Violent Crime</li>
+                <li class="otherCrimeColorLegend">Other Crime</li>
+            </ul>
+        </div>
         <hr>
         <div class="cell table-scroll">
-            <table>
+            <table id="crime_data">
                 <tr>
                     <td> Case Number </td>
                     <td> Crime Type </td>
@@ -65,13 +73,13 @@
                     <td> Time </td>
                 </tr>
                 <tr v-for="item in incidents" v-if="visible_neighborhoods.includes(item.neighborhood_number)">
-                    <td :class="tableColor(item.incidents)">{{ item.case_number }}</td>
-                    <td>{{ item.incident }}</td>
-                    <td>{{ neighborhood_dictionary[item.neighborhood_number] }}</td>
-                    <td>{{ item.block }}</td>
-                    <td>{{ item.police_grid }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.time }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.case_number }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.incident }}</td>
+                    <td :class="tableColor(item.incident)">{{ neighborhood_dictionary[item.neighborhood_number] }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.block }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.police_grid }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.date }}</td>
+                    <td :class="tableColor(item.incident)">{{ item.time }}</td>
                 </tr>
             </table>
         </div>
@@ -108,14 +116,17 @@
             <br>
             <br>
             
+
             <ul style="list-style-type:none;">
                 <li v-for="item in incidents">
                 <input type="checkbox" name="neighborhoods" v-bind:value="neighborhoods.id" checked/> {{ neighborhood_dictionary[item.neighborhood_number] }}
                 </li>
             </ul>
+
+
             <br>
             <ul style="list-style-type:none;">
-                <li v-for="incident of incidents">
+                <li v-for="incident of incidents"> 
                 <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/> {{ item.incident }}
                 </li>
             </ul>
