@@ -80,7 +80,7 @@ function init() {
         }
         app.codeArr = codeArr;
     }).catch((error) => {
-        console.log('Error:', error);
+        console.log('Error: ', error);
     });
 
     getJSON('/neighborhoods').then((result) =>{
@@ -93,7 +93,7 @@ function init() {
         //console.log(neighborhoodDictionary);
 
     }).catch((error) => {
-        console.log('Error:', error);
+        console.log('Error: ', error);
     });
     updateMap();
 }
@@ -114,11 +114,14 @@ function getJSON(url) {
 }
 
 function updateMap() {
+    //updateMap should update the map
+    //These three functions help update the map
     updateVisibleNeighborhoods();
     updateMarkers();
     getIncidents();
 }
 
+//This function should update the map to show the visible neighborhoods only
 function updateVisibleNeighborhoods(){
     let visibleNeighborhoods = [];
     for(let i = 0; i < neighborhood_markers.length; i++) {
@@ -132,9 +135,9 @@ function updateVisibleNeighborhoods(){
         app.visible_neighborhoods = visibleNeighborhoods;
 }
 
+//This function should only update the visible markers on the map
 function updateMarkers() {
-    while(app.markers.length > 0)
-    {
+    while(app.markers.length > 0) {
         map.removeLayer(app.markers.pop())
     }
     for(let i = 0; i<app.visible_neighborhoods.length; i++){
