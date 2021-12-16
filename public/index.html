@@ -83,13 +83,6 @@
                 </tr>
             </table>
         </div>
-    </div>
-
-    <br>
-    <br>
-    <br>
-    <hr>
-    <div id="app" class="right_header">
 
         <h1 style="text-align: center;">
             Data Filter
@@ -116,24 +109,27 @@
             <br>
             <br>
             
-
+            Neighborhoods
             <ul style="list-style-type:none;">
-                <li v-for="item in incidents">
-                <input type="checkbox" name="neighborhoods" v-bind:value="neighborhoods.id" checked/> {{ neighborhood_dictionary[item.neighborhood_number] }}
+                <li v-for="item in neighborhood_dictionary">
+                <input type="checkbox" name="neighborhoods" v-bind:value="neighborhoods.id" checked/> {{ item }}
                 </li>
             </ul>
 
 
             <br>
+            <br>
+            Incident Types
             <ul style="list-style-type:none;">
-                <li v-for="incident of incidents"> 
-                <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/> {{ item.incident }}
+                <li v-for="incident in codes"> 
+                <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/> {{ incident.incident_type }}
                 </li>
             </ul>
+        
             <br>
             <br>
             <input type="reset" onclick="window.location.reload()"/>
-            <input id="submit" type="button" value = "Submit" onclick = "updateCheckboxes()">
+            <input id="submit" type="button" value = "Submit" onclick = "updateMap()">
 
         </form>
     </div>

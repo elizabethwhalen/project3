@@ -47,13 +47,13 @@ function init() {
             neighborhood_dictionary: {},
             visible_neighborhoods: [],
             markers: [],
-            /*--------------Doesn't like these-----------------
+            item: [],
+            
             start_date: "2014-08-14",
-            end_date: new Date().toISOString.slice(0,10),
+            end_date: "2021-09-30",
             start_time: "00:00",
             end_time: "23:59",
             num_crimes: 1000
-            --------------------------------------------------*/
         },
 
         methods: {
@@ -104,7 +104,7 @@ function init() {
         }
         app.codeArr = codeArr;
     }).catch((error) => {
-        console.log('Error:', error);
+        console.log('Error: ', error);
     });
 
     getJSON('/neighborhoods').then((result) =>{
@@ -116,7 +116,7 @@ function init() {
         app.neighborhood_dictionary = neighborhoodDictionary;
 
     }).catch((error) => {
-        console.log('Error:', error);
+        console.log('Error: ', error);
     });
     updateMap();
 }
@@ -137,11 +137,14 @@ function getJSON(url) {
 }
 
 function updateMap() {
+    //updateMap should update the map
+    //These three functions help update the map
     updateVisibleNeighborhoods();
     updateMarkers();
     getIncidents();
 }
 
+//This function should update the map to show the visible neighborhoods only
 function updateVisibleNeighborhoods(){
     let visibleNeighborhoods = [];
     for(let i = 0; i < neighborhood_markers.length; i++) {
@@ -151,13 +154,12 @@ function updateVisibleNeighborhoods(){
         }
     }
     console.log("map interaction finished: " + visibleNeighborhoods);
-    if (visibleNeighborhoods.length != 0)
-        app.visible_neighborhoods = visibleNeighborhoods;
+    app.visible_neighborhoods = visibleNeighborhoods;
 }
 
+//This function should only update the visible markers on the map
 function updateMarkers() {
-    while(app.markers.length > 0)
-    {
+    while(app.markers.length > 0) {
         map.removeLayer(app.markers.pop())
     }
     for(let i = 0; i<app.visible_neighborhoods.length; i++){
