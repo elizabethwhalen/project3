@@ -181,9 +181,10 @@ function updateMarkers() {
         map.removeLayer(app.markers.pop())
     }
     for(let i = 0; i<app.visible_neighborhoods.length; i++){
-        //app.markers.push(L.marker(neighborhood_markers[i].location).addTo(map));
-        app.markers.push(map.addLayer(L.marker(neighborhood_markers[i].location)));
-
+        
+        app.markers.push(map.addLayer(L.marker(neighborhood_markers[i].location)));  //new
+        //app.markers.push(L.marker(neighborhood_markers[i].location).addTo(map));   //old
+        
     }
 
 }
@@ -206,10 +207,10 @@ function getIncidents() {
                         count = count + 1;
                     }
                 }
-                console.log("in loop");
+                //console.log("in loop");
                 //app.markers[i].bindPopup('Neighborhood ' +(i+1) + ': ' +count + ' total crimes');
-                //app.markers[i].bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes');
-                app.markers(i).bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes').addTo(map);
+                app.marker.bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes');
+                //app.markers(i).bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes').addTo(map);
             }
         }).catch((error) => {
             console.log('Error:', error);
