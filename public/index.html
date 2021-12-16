@@ -120,10 +120,17 @@
 
             <br>
             <br>
+            <ul style="list-style-type:none;">
+                
+                <li :class="renderIncidents(incident)" v-for="incident in codes"> 
+                <!--<input type="checkbox" name="incidents" v-bind:value="incident.code" :class="renderIncidents(incident)" checked/>  {{ incident }}-->
+                </li>
+            </ul>
+
             Incident Types
             <ul style="list-style-type:none;">
-                <li v-for="incident in codes"> 
-                <input type="checkbox" name="incidents" v-bind:value="incident.code" :class="renderIncidents(incident)" checked/>  {{ incident}}
+                <li v-for="incident in Object.keys(grouped_incidents)"> 
+                <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/>  {{ incident }}
                 </li>
             </ul>
         
