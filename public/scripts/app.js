@@ -48,6 +48,7 @@ function init() {
             visible_neighborhoods: [],
             markers: [],
             item: [],
+            grouped_incidents: {},
             
             start_date: "2014-08-14",
             end_date: "2021-09-30",
@@ -58,7 +59,7 @@ function init() {
 
         methods: {
             tableColor(incidents) {
-                console.log(incidents);
+                //console.log(incidents);
                 if(incidents == "Murder" || incidents == "Homicide" || incidents == "Simple Asasult Dom." || incidents == "Discharge" || incidents == "Agg. Assault Dom." || incidents == "Agg. Assault" || incidents == "Rape") {
                     return 'violentCrimeColor'
                 }
@@ -68,6 +69,20 @@ function init() {
                 else {
                     return 'otherCrimeColor'
                 }
+            },
+
+            renderIncidents(incidents) {
+               // console.log(incidents);
+                let arr = incidents.incident_type.split(',');
+                if(! (arr[0] in app.grouped_incidents) ){
+                    app.grouped_incidents[arr[0]] = [incidents.code];
+                }
+                else {
+
+                    app.grouped_incidents[arr[0]].push(incidents.code);
+                }
+
+                console.log(app.grouped_incidents);
             }
         }
     });
@@ -119,7 +134,10 @@ function init() {
         console.log('Error: ', error);
     });
     updateMap();
+
 }
+
+
 
 function getJSON(url) {
     return new Promise((resolve, reject) => {
@@ -214,6 +232,10 @@ function getIncidents() {
             console.log('Error:', error);
         });
     }
+}
+
+function updateQuery(){
+    console.log("testing")
 }
 
 function search() {

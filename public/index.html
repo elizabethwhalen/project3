@@ -23,6 +23,7 @@
     <!-- Application -->
     <link rel="stylesheet" href="css/style.css"/>
     <script type="application/javascript" src="scripts/app.js"></script>
+    <script type="application/javascript" src="../server.js"></script>
     <!-- End: Application -->
 </head>
 <body onload="init()">
@@ -122,14 +123,15 @@
             Incident Types
             <ul style="list-style-type:none;">
                 <li v-for="incident in codes"> 
-                <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/> {{ incident.incident_type }}
+                <input type="checkbox" name="incidents" v-bind:value="incident.code" :class="renderIncidents(incident)" checked/>  {{ incident}}
                 </li>
             </ul>
         
             <br>
             <br>
             <input type="reset" onclick="window.location.reload()"/>
-            <input id="submit" type="button" value = "Submit" onclick = "updateMap()">
+            <!--<input id="submit" type="button" value = "Submit" onclick = "updateMap()">-->
+            <input id="submit" type="button" value = "Submit" onclick = "updateQuery()" id="update">
 
         </form>
     </div>
