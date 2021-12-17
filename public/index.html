@@ -91,48 +91,166 @@
         <hr>
         <br>
         <form id="filter">
-            <input type="text" name="num_crimes" v-bind:value="num_crimes"> # of crimes visible
+            <input type="text" name="num_crimes" v-bind:value="num_crimes" v-model="num_crimes"> # of crimes visible
             
             <br>
             <br>
             <!--Doesn't seem to like the start_date and end_date stuff-->
-            <input type="date" name="start_date" v-bind:value="start_date"> Begin Date
+            <input type="date" name="start_date" v-bind:value="start_date" v-model="start_date"> Begin Date
             <br>
-            <input type="date" name="end_date" v-bind:value="end_date"> End Date
+            <input type="date" name="end_date" v-bind:value="end_date" v-model="end_date"> End Date
             
             <br>
             <br>
             
-            <input type="time" name="start_time" v-bind:value="start_time"> Begin Time
+            <input type="time" name="start_time" v-bind:value="start_time" v-model="start_time"> Begin Time
             <br>
-            <input type="time" name="end_time" v-bind:value="end_time"> End Time
+            <input type="time" name="end_time" v-bind:value="end_time" v-model="end_time"> End Time
             
             <br>
             <br>
             
             Neighborhoods
+            <!--
             <ul style="list-style-type:none;">
                 <li v-for="item in neighborhood_dictionary">
                 <input type="checkbox" name="neighborhoods" v-bind:value="neighborhoods.id" checked/> {{ item }}
                 </li>
-            </ul>
+            </ul> -->
+
+            <br>
+            <input type="checkbox" id="Conway/Battlecreek/Highwood" value="Conway/Battlecreek/Highwood" v-model="selected_neighborhoods">
+            <label for="Conway/Battlecreek/Highwood">Conway/Battlecreek/Highwood</label>
+            <br>
+            <input type="checkbox" id="Greater East Side" value="Greater East Side" v-model="selected_neighborhoods">
+            <label for="Greater East Side">Greater East Side</label>
+            <br>
+            <input type="checkbox" id="West Side" value="West Side" v-model="selected_neighborhoods">
+            <label for="West Side">West Side</label>
+            <br>
+            <input type="checkbox" id="Dayton's Bluff" value="Dayton's Bluff" v-model="selected_neighborhoods">
+            <label for="Dayton's Bluff">Dayton's Bluff</label>
+            <br>
+            <input type="checkbox" id="Payne/Phalen" value="Payne/Phalen" v-model="selected_neighborhoods">
+            <label for="Payne/Phalen">Payne/Phalen</label>
+            <br>
+            <input type="checkbox" id="North End" value="North End" v-model="selected_neighborhoods">
+            <label for="North End">North End</label>
+            <br>
+            <input type="checkbox" id="Thomas/Dale(Frogtown)" value="Thomas/Dale(Frogtown)" v-model="selected_neighborhoods">
+            <label for="Thomas/Dale(Frogtown)">Thomas/Dale(Frogtown)</label>
+            <br>
+            <input type="checkbox" id="Summit/University" value="Summit/University" v-model="selected_neighborhoods">
+            <label for="Summit/University">Summit/University</label>
+            <br>
+            <input type="checkbox" id="West Seventh" value="West Seventh" v-model="selected_neighborhoods">
+            <label for="West Seventh">West Seventh</label>
+            <br>
+            <input type="checkbox" id="Como" value="Como" v-model="selected_neighborhoods">
+            <label for="Como">Como</label>
+            <br>
+            <input type="checkbox" id="Hamline/Midway" value="Hamline/Midway" v-model="selected_neighborhoods">
+            <label for="Hamline/Midway">Hamline/Midway</label>
+            <br>
+            <input type="checkbox" id="St. Anthony" value="St. Anthony" v-model="selected_neighborhoods">
+            <label for="St. Anthony">St. Anthony</label>
+            <br>
+            <input type="checkbox" id="Union Park" value="Union Park" v-model="selected_neighborhoods">
+            <label for="Union Park">Union Park</label>
+            <br>
+            <input type="checkbox" id="Macalester-Groveland" value="Macalester-Groveland" v-model="selected_neighborhoods">
+            <label for="Macalester-Groveland">Macalester-Groveland</label>
+            <br>
+            <input type="checkbox" id="Highland" value="Highland" v-model="selected_neighborhoods">
+            <label for="Highland">Highland</label>
+            <br>
+            <input type="checkbox" id="Summit Hill" value="Summit Hill" v-model="selected_neighborhoods">
+            <label for="Summit Hill">Summit Hill</label>
+            <br>
+            <input type="checkbox" id="Capitol River" value="Capitol River" v-model="selected_neighborhoods">
+            <label for="Capitol River">Capitol River</label>
+            <br>
 
 
             <br>
             <br>
             <ul style="list-style-type:none;">
-                
                 <li :class="renderIncidents(incident)" v-for="incident in codes"> 
                 <!--<input type="checkbox" name="incidents" v-bind:value="incident.code" :class="renderIncidents(incident)" checked/>  {{ incident }}-->
                 </li>
             </ul>
-
+<!--
             Incident Types
             <ul style="list-style-type:none;">
                 <li v-for="incident in Object.keys(grouped_incidents)"> 
                 <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/>  {{ incident }}
                 </li>
-            </ul>
+            </ul>-->
+
+            <!--
+            Incident Types
+            <ul style="list-style-type:none;">
+                <li v-for="incident in codes"> 
+                <input type="checkbox" name="incidents" v-bind:value="incident.code" checked/>  {{ incident }}
+                </li>
+            </ul>-->
+
+            Incident Types
+            <br>
+            <input type="checkbox" id="Murder" value="Murder" v-model="selected_incidents">
+            <label for="Murder">Murder</label>
+            <br>
+            <input type="checkbox" id="Rape" value="Rape" v-model="selected_incidents">
+            <label for="Rape">Rape</label>
+            <br>
+            <input type="checkbox" id="Assault" value="Assault" v-model="selected_incidents">
+            <label for="Assault">Assault</label>
+            <br>
+            <input type="checkbox" id="Aggravated Assault" value="Aggravated Assault" v-model="selected_incidents">
+            <label for="Aggravated Assault">Aggravated Assault</label>
+            <br>
+            <input type="checkbox" id="Arson" value="Arson" v-model="selected_incidents">
+            <label for="Arson">Arson</label>
+            <br>
+            <input type="checkbox" id="Burglary" value="Burglary" v-model="selected_incidents">
+            <label for="Burglary">Burglary</label>
+            <br>
+            <input type="checkbox" id="Motor Vehicle Theft" value="Motor Vehicle Theft" v-model="selected_incidents">
+            <label for="Motor Vehicle Theft">Motor Vehicle Theft</label>
+            <br>
+            <input type="checkbox" id="Community Engagement Event" value="Community Engagement Event" v-model="selected_incidents">
+            <label for="Community Engagement Event">Community Engagement Event</label>
+            <br>
+            <input type="checkbox" id="Criminal Damage to Property" value="Criminal Damage to Property" v-model="selected_incidents">
+            <label for="Criminal Damage to Property">Criminal Damage to Property</label>
+            <br>
+            <input type="checkbox" id="Death - Investigation of a Death" value="Death - Investigation of a Death" v-model="selected_incidents">
+            <label for="Death - Investigation of a Death">Death - Investigation of a Death</label>
+            <br>
+            <input type="checkbox" id="Graffiti" value="Graffiti" v-model="selected_incidents">
+            <label for="Graffiti">Graffiti</label>
+            <br>
+            <input type="checkbox" id="Narcotics" value="Narcotics" v-model="selected_incidents">
+            <label for="Narcotics">Narcotics</label>
+            <br>
+            <input type="checkbox" id="Proactive Foot Patrol" value="Proactive Foot Patrol" v-model="selected_incidents">
+            <label for="Proactive Foot Patrol">Proactive Foot Patrol</label>
+            <br>
+            <input type="checkbox" id="Proactive Police Visit" value="Proactive Police Visit" v-model="selected_incidents">
+            <label for="Proactive Police Visit">Proactive Police Visit</label>
+            <br>
+            <input type="checkbox" id="Robbery" value="Robbery" v-model="selected_incidents">
+            <label for="Robbery">Robbery</label>
+            <br>
+            <input type="checkbox" id="Theft" value="Theft" v-model="selected_incidents">
+            <label for="Theft">Theft</label>
+            <br>
+            <input type="checkbox" id="Weapons" value="Weapons" v-model="selected_incidents">
+            <label for="Weapons">Weapons</label>
+            <br>
+
+
+
         
             <br>
             <br>
