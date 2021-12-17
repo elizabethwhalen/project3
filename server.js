@@ -184,7 +184,7 @@ app.get('/incidents', (req, res) => {
     } else {
         query = query + ' WHERE code>-1 ORDER BY date_time desc LIMIT ' + limitValue;
     }
-   // console.log("query: " + query);
+    console.log("query: " + query);
 
     let params = [];
     let promise = databaseSelect(query, params);

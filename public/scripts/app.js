@@ -189,7 +189,6 @@ function updateMarkers() {
     }
     for(let i = 0; i<app.visible_neighborhoods.length; i++){
         //app.markers.push(L.marker(neighborhood_markers[i].location).addTo(map).bindPopup("test").openPopup()); //pop ups work
-
         app.markers.push(map.addLayer(L.marker(neighborhood_markers[i].location).bindPopup(app.neighborhood_dictionary[i+1] + ": " + app.count_incidents[app.neighborhood_dictionary[i+1]]).openPopup())); //table works
         // + ": " + count_incidents[app.neighborhood_dictionary[i+1]]
     }
@@ -315,9 +314,18 @@ function updateQuery(){
     }
 
     //console.log("neighborhood_string = " + string_n);
-    console.log("code=" + string_i);
+    //console.log("code=" + string_i);
 
-    let url = "/incidents?neighborhood=" + string_n + "&start_date=" + app.start_date + "T" + app.start_time + "&end_date=" + app.end_date + "T" + app.end_time + "&limit=" + app.num_crimes + "&code=" + string_i;
+    let url = "/incidents?start_date=" + app.start_date + "T" + app.start_time + "&end_date=" + app.end_date + "T" + app.end_time + "&limit=" + app.num_crimes;
+
+    if(string_i != ""){
+        url = url + "&code=" + string_i;
+    }
+    if(string_n != ""){
+        url = url + "&neighborhood=" + string_n;
+    }
+
+
     getJSON(url).then((result) =>{
         console.log("url: " + url);
         app.incidents = result;
