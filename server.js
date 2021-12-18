@@ -6,6 +6,7 @@ let cors = require('cors');
 // NPM modules
 let express = require('express');
 let sqlite3 = require('sqlite3');
+const { PassThrough } = require('stream');
 
 
 let app = express();
@@ -140,22 +141,24 @@ app.get('/incidents', (req, res) => {
                 }
                 else if(param =='neighborhood'){
                     newParam = 'neighborhood_number';
-                } else {
+                } else{
                     newParam = 'code';
                 }
                 if (ifWhere){
-                    query = query + ' AND ' + newParam + '=';
+                    query = query + ' AND (' + newParam + '=';
                 } else {
-                    query = query + ' WHERE ' + newParam + '=';
+                    query = query + ' WHERE (' + newParam + '=';
                 }
                 ifWhere = true;
+
                 for(let j=0; j<nArr.length; j++){
                     if (j != nArr.length-1){
-                        query = query + nArr[j] + ' OR  ' + newParam + '=';
+                        query = query + nArr[j] + ' OR ' + newParam + '=';
                     } else {
                         query = query + nArr[j];
                     }
                 }
+                query = query + ")";
             } else if (param == 'limit'){
 
                 limitValue = parseInt(nArr[0]);
@@ -181,7 +184,7 @@ app.get('/incidents', (req, res) => {
     } else {
         query = query + ' WHERE code>-1 ORDER BY date_time desc LIMIT ' + limitValue;
     }
-    //console.log(query);
+    console.log("query: " + query);
 
     let params = [];
     let promise = databaseSelect(query, params);

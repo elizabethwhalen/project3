@@ -44,16 +44,20 @@ function init() {
             incidents: [],
             search_bar: "",
             code_dictionary: {},
+            grouped_incidents: {},
             neighborhood_dictionary: {},
             visible_neighborhoods: [],
             markers: [],
             item: [],
-            grouped_incidents: {},
+            grouped_codes: {"Murder": [100, 110, 120], "Rape": [210, 220], "Robbery": [300, 311, 312, 313, 314, 321, 322, 323, 324, 331, 333, 334, 341, 342, 343, 344, 351, 352, 353, 354, 361, 363, 364, 371, 372, 373, 374], "Aggravated Assault": [400, 410, 411, 412, 420, 421, 422, 430, 431, 432, 440, 441, 442, 450, 451, 452, 453], "Burglary": [500, 510, 511, 513, 515, 516, 520, 521, 523, 525, 526, 530, 531, 533, 535, 536, 540, 541, 543, 545, 546, 550, 551, 553, 555, 556, 560, 561, 563, 565, 566], "Theft": [600, 603, 611, 612, 613, 614, 621, 622, 623, 630, 631, 632, 633, 640, 641, 642, 643, 651, 652, 653, 661, 662, 663, 671, 672, 673, 681, 682, 683, 691, 692, 693], "Motor Vehicle Theft": [700, 710, 711, 712, 720, 721, 722], "Assault": [810, 861, 862, 863], "Arson": [900, 901, 903, 905, 911, 913, 915, 921, 922, 923, 925, 931, 933, 941, 942, 951, 961, 971, 972, 975, 981, 982], "Criminal Damage to Property": [1400, 1410, 1420, 1430], "Graffiti": [1401, 1415, 1416, 1425, 1426, 1435, 1436], "Narcotics": [1800, 1810, 1811, 1812, 1813, 1814, 1815, 1820, 1822, 1823, 1824, 1825, 1830, 1835, 1840, 1841, 1842, 1843, 1844, 1845, 1850, 1855, 1860, 1865, 1870, 1880, 1885], "Weapons": [2619], "Death - Investigation of a Death": [3100], "Proactive Police Visit": [9954], "Community Engagement Event": [9959], "Proactive Foot Patrol": [9986]},
+            selected_incidents:[],
+            selected_neighborhoods: [],
+            count_incidents: {},
             
             start_date: "2014-08-14",
             end_date: "2021-09-30",
-            start_time: "00:00",
-            end_time: "23:59",
+            start_time: "00:00:00",
+            end_time: "23:59:59",
             num_crimes: 1000
         },
 
@@ -82,7 +86,7 @@ function init() {
                     app.grouped_incidents[arr[0]].push(incidents.code);
                 }
 
-                console.log(app.grouped_incidents);
+                //console.log(app.grouped_incidents);
             }
         }
     });
@@ -116,8 +120,10 @@ function init() {
         let codeArr = {};
         for(i = 0; i<app.codes.length; i++){
             codeArr[app.codes[i].code] = app.codes[i].type;
+           // app.code_dictionary[app.codes[i].code] = app.codes[i].type;
         }
         app.codeArr = codeArr;
+
     }).catch((error) => {
         console.log('Error: ', error);
     });
@@ -140,6 +146,7 @@ function init() {
 
 
 function getJSON(url) {
+   // console.log("url: " + url);
     return new Promise((resolve, reject) => {
         $.ajax({
             dataType: "json",
@@ -181,13 +188,13 @@ function updateMarkers() {
         map.removeLayer(app.markers.pop())
     }
     for(let i = 0; i<app.visible_neighborhoods.length; i++){
-        
-        app.markers.push(map.addLayer(L.marker(neighborhood_markers[i].location)));  //new
-        //app.markers.push(L.marker(neighborhood_markers[i].location).addTo(map));   //old
-        
+        //app.markers.push(L.marker(neighborhood_markers[i].location).addTo(map).bindPopup("test").openPopup()); //pop ups work
+        app.markers.push(map.addLayer(L.marker(neighborhood_markers[i].location).bindPopup(app.neighborhood_dictionary[i+1] + ": " + app.count_incidents[app.neighborhood_dictionary[i+1]]).openPopup())); //table works
+        // + ": " + count_incidents[app.neighborhood_dictionary[i+1]]
     }
 
 }
+
 
 function getIncidents() {
     if (app.visible_neighborhoods.length > 0) {
@@ -206,11 +213,15 @@ function getIncidents() {
                     if(i+1== app.incidents[j].neighborhood_number){
                         count = count + 1;
                     }
+                   // app.count_incidents[app.incidents[j].neighborhood_name] = count;
                 }
+                //console.log(app.neighborhood_dictionary[i+1] + " : " + count + ' total crimes');
+                app.count_incidents[app.neighborhood_dictionary[i+1]] = count;
                 //console.log("in loop");
                 //app.markers[i].bindPopup('Neighborhood ' +(i+1) + ': ' +count + ' total crimes');
-                app.marker.bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes');
-                //app.markers(i).bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes').addTo(map);
+                //app.markers[i].bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes');
+                //app.markers)i).bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes').addTo(map); //what we had before
+                //app.markers[i].bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes').openPopup();
             }
         }).catch((error) => {
             console.log('Error:', error);
@@ -239,56 +250,91 @@ function getIncidents() {
 }
 
 function updateQuery(){
-    console.log("testing");
     /*
-    if (1)
-    {
-        let incSearch = "/incidents?id=" + (app.visible_neighborhoods[0] + 1);
-        for(let i = 1; i < app.visible_neighborhoods.length; i++)
-        {
-            incSearch = incSearch + "," + (app.visible_neighborhoods[i] + 1);
+    console.log("selected_incidents: " + app.selected_incidents);
+    console.log("selected_neighborhoods: " + app.selected_neighborhoods);
+    console.log("num_crimes: " + app.num_crimes);
+    console.log("start_time: " + app.start_time);
+    console.log("end_time: " + app.end_time);
+    console.log("start_date: " + app.start_date);
+    console.log("end_date: " + app.end_date);*/
+
+    for(let key in app.neighborhood_dictionary){
+       // console.log("key: " + key + " value: " + app.neighborhood_dictionary[key]);
+    }
+    
+    let n = [];
+    let string_n = "";
+    for(let key in app.neighborhood_dictionary){
+        for(let neighborhood in app.selected_neighborhoods){
+            if(app.neighborhood_dictionary[key] == app.selected_neighborhoods[neighborhood]){
+                n.push(key);
+            }
         }
-        getJSON(incSearch).then((result) =>{
-            app.incidents = result;
+    }
 
-            let i;
-            for(i = 0; i<app.visible_neighborhoods.length;i++){
-                let j;
-                let count=0;
-                for(j=0;j<app.incidents.length; j++){
-                    if(i+1== app.incidents[j].neighborhood_number){
-                        count = count + 1;
-                    }
-                }
-                //app.markers[i].bindPopup('Neighborhood ' +(i+1) + ': ' +count + ' total crimes');
-                app.markers[i].bindPopup(app.neighborhood_dictionary[i+1] + ': ' +count + ' total crimes');
-            }
+   let inc = [];
+   let string_i = "";
+
+   
+   for(item in app.grouped_codes){
+       //console.log("Key: " + item + "  value: " + app.grouped_codes[item]);
+       for(let incident in app.selected_incidents){
+           if(item == app.selected_incidents[incident]){
+               for(c in app.grouped_codes[item]){
+                   inc.push(app.grouped_codes[item][c]);
+               }
+               //inc.push(item);
+           }
+       }
+   }
+   
+    
+    for(let i = 0; i<inc.length; i++){//item in n){
+        if(i == inc.length - 1){
+            string_i = string_i + inc[i];
+            //console.log("string: " + string_n);
+        }
+        else{
+            string_i = string_i + inc[i] + ",";
+            //console.log("string: " + string_n);
+        }
+    }
+
+
+    for(let i = 0; i<n.length; i++){//item in n){
+        if(i == n.length - 1){
+            string_n = string_n + n[i];
+            //console.log("string: " + string_n);
+        }
+        else{
+            string_n = string_n + n[i] + ",";
+            //console.log("string: " + string_n);
+        }
+    }
+
+    //console.log("neighborhood_string = " + string_n);
+    //console.log("code=" + string_i);
+
+    let url = "/incidents?start_date=" + app.start_date + "T" + app.start_time + "&end_date=" + app.end_date + "T" + app.end_time + "&limit=" + app.num_crimes;
+
+    if(string_i != ""){
+        url = url + "&code=" + string_i;
+    }
+    if(string_n != ""){
+        url = url + "&neighborhood=" + string_n;
+    }
+
+
+    getJSON(url).then((result) =>{
+        console.log("url: " + url);
+        app.incidents = result;
+        //console.log("submit result: " + result);
         }).catch((error) => {
             console.log('Error:', error);
-        });
-    }
-    else
-    {
-        getJSON('/incidents').then((result) =>{
-            app.incidents = result;
-
-            let i;
-            for(i = 0; i<app.visible_neighborhoods.length;i++){
-                let j;
-                let count=0;
-                for(j=0;j<app.incidents.length; j++){
-                    if(i+1== app.incidents[j].neighborhood_number){
-                        count = count + 1;
-                    }
-                }
-                neighborhood_markers[i].marker.bindPopup('Neighborhood ' +(i+1) + ': ' +count + ' total crimes');
-            }
-        }).catch((error) => {
-            console.log('Error:', error);
-        });
-    }
-*/
+    });
 }
+
 
 function search() {
     let query = app.search_bar;
@@ -313,8 +359,6 @@ function search() {
             }
         }
     }
-    //console.log("boolean: " + number);
-    //console.log(query);
     if(number == false){
         getJSON('https://nominatim.openstreetmap.org/search?format=json&q=' + new_query + '+Saint+Paul+Minnesota').then((result) => {
             console.log(result);
