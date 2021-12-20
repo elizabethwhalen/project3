@@ -79,3 +79,15 @@ nav{
     list-style-type: square;
     align-items: left;
 }
+
+#center {
+    text-align: center;
+}
+
+ol {
+    list-style-position: inside;
+}
+
+#contributer {
+    text-align: center;
+}
